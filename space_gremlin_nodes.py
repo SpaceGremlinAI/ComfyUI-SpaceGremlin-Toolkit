@@ -569,28 +569,115 @@ class SpaceGremlinListSplitAtIndex:
 
 
 
-_ANGLE_PHRASES = {
-    "front": "facing the camera directly",
-    "front 3/4 left": "turned three-quarters toward camera-left, most of the face and body visible",
-    "front 3/4 right": "turned three-quarters toward camera-right, most of the face and body visible",
-    "left profile": "turned to show the left profile",
-    "right profile": "turned to show the right profile",
-    "back 3/4 left": "turned mostly away, seen three-quarters from the back on the left side",
-    "back 3/4 right": "turned mostly away, seen three-quarters from the back on the right side",
-    "back": "facing away from the camera, back to camera — a rear view",
+
+
+_FRAMING_PHRASES = {
+    "Human": {
+        # --- PLAN D'ENSEMBLE & CADRAGES GLOBAUX ---
+        "Extreme Wide Shot": "an extreme-wide shot, framed from a distance",
+        "Full Body Shot": "a full shot, framed from head to toe",
+        "Medium Full Shot": "a medium-full shot, framed from mid-thigh to top of head",
+        "Lower Body Shot": "a lower-body shot, framed from the mid-torso down to the feet",
+
+        # --- BUSTE & HAUT DU CORPS ---
+        "Medium Shot": "a medium shot, framed at waist level",
+        "Medium Close-up Mid-Torso": "a medium close-up, framed at the upper body area (from shoulder to belt)",
+        "Bust Shot": "a bust shot, framed at upper body level (shoulder)",
+
+        # --- PLAN RAPPROCHÉ & VISAGE ---
+        "Close-up": "a close-up shot, focused on the face",
+        "Extreme Close-up": "an extreme close-up shot, focused tightly on the eyes and features",
+
+        # --- DÉTAILS DES MEMBRES SUPÉRIEURS ---
+        "Arm Detail Shot": "a detail shot aligned with the straight upper arm (from shoulder past extended elbow, arm hanging naturally straight)",
+        "Hand Close-up": "a close-up shot framed at the hand area",
+
+        # --- DÉTAILS DES MEMBRES INFÉRIEURS ---
+        "Thigh Shot": "a shot framed at the upper legs (between belt and knee)",
+        "Knee Shot": "a shot framed at the knee area",
+        "Shin Shot": "a shot framed at the shin (from knee to foot)",
+        "Leg Detail Shot": "a detail shot aligned with the straight leg (from thigh past extended knee, leg naturally straight)",
+        "Foot Close-up": "a close-up shot framed at the foot area",
+    },
+    "Mecha/Robot": {
+        "Extreme Wide Shot": "an extreme-wide shot, framed from a distance",
+        "Full Body Shot": "a full shot, showing the complete unit structure",
+        "Medium Full Shot": "a medium-full shot, framed at the upper main chassis",
+        "Lower Body Shot": "a lower-section shot, framed on the lower chassis and propulsion/base",
+        "Medium Shot": "a medium shot, focused on the central torso chassis",
+        "Medium Close-up Mid-Torso": "a medium close-up, focused on the upper mechanical section",
+        "Bust Shot": "a bust shot, focused on the primary sensor and upper module area",
+        "Close-up": "a close-up shot, focused on primary head optics and main sensors",
+        "Extreme Close-up": "an extreme close-up shot, tightly focused on optical lens and focal mechanical details",
+        "Arm Detail Shot": "a detail shot on the primary upper manipulator assembly",
+        "Hand Close-up": "a close-up shot framed on the end-effector or grasper area",
+        "Thigh Shot": "a shot framed on the upper leg actuator or upper support structure",
+        "Knee Shot": "a shot framed on the mid-leg joint articulation",
+        "Shin Shot": "a shot framed on the lower leg structural housing",
+        "Leg Detail Shot": "a detail shot aligned with the main lower support limb",
+        "Foot Close-up": "a close-up shot framed on the base contact pad or foot assembly",
+    },
+    "Creature": {
+        "Extreme Wide Shot": "an extreme-wide shot, framed from a distance",
+        "Full Body Shot": "a full-length shot, showing the entire creature",
+        "Medium Full Shot": "a medium-full shot, showing the upper torso and head area",
+        "Lower Body Shot": "a lower-body shot, showing the rear, tail, or lower limbs",
+        "Medium Shot": "a medium shot, framed on the central body",
+        "Medium Close-up Mid-Torso": "a medium close-up, focused on the upper torso section",
+        "Bust Shot": "a bust shot, focused on the neck and head area",
+        "Close-up": "a close-up shot, focused on the head and facial features",
+        "Extreme Close-up": "an extreme close-up shot, focused tightly on the eyes and sensory features",
+        "Arm Detail Shot": "a detail shot on the forelimb or upper extremity",
+        "Hand Close-up": "a close-up shot framed on the claw or front appendage",
+        "Thigh Shot": "a shot framed on the upper hind limb",
+        "Knee Shot": "a shot framed on the main leg joint",
+        "Shin Shot": "a shot framed on the lower limb area",
+        "Leg Detail Shot": "a detail shot aligned with the main supporting limb",
+        "Foot Close-up": "a close-up shot framed on the paw, claw, or base support",
+    },
+    "Object/Vehicle": {
+        # --- PLANS GLOBATION & CADRAGES ---
+        "Extreme Wide Shot": "an extreme-wide shot, framed from a distance",
+        "Full Body Shot": "a full shot, showing the entire object",
+        "Medium Full Shot": "a medium-full shot, framed on the main body of the object",
+        "Lower Body Shot": "a lower-section shot, focused on the base or lower housing",
+
+        # --- SECTIONS CENTRALES ---
+        "Medium Shot": "a medium shot, focused on the central section",
+        "Medium Close-up Mid-Torso": "a medium close-up, focused on the upper-mid section",
+        "Bust Shot": "a close-up shot, focused on the upper front interface area",
+
+        # --- DÉTAILS DE FACES & MODULES ---
+        "Close-up": "a close-up shot, focused on the primary front details and controls",
+        "Extreme Close-up": "an extreme close-up shot, tightly focused on material textures and fine mechanical or surface details",
+
+        # --- ASSEMBLAGES SUPÉRIEURS / EXTENSION ---
+        "Arm Detail Shot": "a detail shot aligned with the primary upper extension or component",
+        "Hand Close-up": "a close-up shot framed on the front nozzle, interface, or attachment point",
+
+        # --- COMPOSANTS INFÉRIEURS / BASE ---
+        "Thigh Shot": "a shot framed on the upper structural support or chassis",
+        "Knee Shot": "a shot framed on the mid-support joint or central frame alignment",
+        "Shin Shot": "a shot framed on the lower housing or wheel well section",
+        "Leg Detail Shot": "a detail shot aligned with the main lower chassis or support system",
+        "Foot Close-up": "a close-up shot framed on the wheel, tread, or base contact point",
+    },
+}
+_FRAMING_OPTIONS = list(_FRAMING_PHRASES["Human"].keys())
+
+
+_ANGLE_PHRASES = { 
+    "front": "seen from a front view",
+    "left profile": "seen from a left-side profile view",
+    "right profile": "seen from a right-side profile view",
+    "back": "seen from a back view",
+    "front 3/4 left": "seen from a front_three_quarter view on left",
+    "front 3/4 right": "seen from a front_three_quarter view on right",
+    "back 3/4 left": "seen from a back_three_quarter view on left",
+    "back 3/4 right": "seen from a back_three_quarter view on right",
 }
 _ANGLE_OPTIONS = list(_ANGLE_PHRASES.keys())
 
-_FRAMING_PHRASES = {
-    "extreme wide shot": "an extreme wide shot",
-    "wide shot": "a wide shot",
-    "medium wide shot": "a medium-wide shot",
-    "medium shot": "a medium shot",
-    "medium close-up": "a medium close-up",
-    "close-up": "a close-up",
-    "extreme close-up": "an extreme close-up",
-}
-_FRAMING_OPTIONS = list(_FRAMING_PHRASES.keys())
 
 _EXPRESSION_PHRASES = {
     "neutral": "neutral",
@@ -611,40 +698,78 @@ _EXPRESSION_PHRASES = {
 }
 _EXPRESSION_OPTIONS = list(_EXPRESSION_PHRASES.keys())
 
-_CAMERA_ANGLE_TEMPLATES = {
-    "eye level": "the camera held level with {target}",
-    "low angle": "the camera positioned below {target}, tilted upward toward it — a low-angle shot",
-    "high angle": "the camera positioned above {target}, tilted downward toward it — a high-angle shot",
-    "bird's eye view": "the camera directly overhead, high above <Subject 1>, looking straight down at {target} — an extreme high-angle bird's-eye view",
-    "worm's eye view": "the camera on the ground, close to the floor, tilted upward toward {target} — an extreme low-angle worm's-eye view",
-}
-_CAMERA_ANGLE_OPTIONS = list(_CAMERA_ANGLE_TEMPLATES.keys())
-
-_CAMERA_ANGLE_FIXED_HEIGHT = {"bird's eye view", "worm's eye view"}
-
-_CAMERA_HEIGHT_PHRASES = {
-    "ground level": "positioned at ground level",
-    "knee height": "positioned at knee height",
-    "waist height": "positioned at waist height",
-    "chest height": "positioned at chest height",
-    "eye level": "positioned at eye level",
-    "overhead": "positioned above <Subject 1>'s head",
-}
-_CAMERA_HEIGHT_OPTIONS = list(_CAMERA_HEIGHT_PHRASES.keys())
-
-_CAMERA_TARGET_PHRASES = {
-    "whole body": "<Subject 1>",
-    "lower legs": "<Subject 1>'s lower legs",
-    "upper legs": "<Subject 1>'s upper legs",
-    "waist": "<Subject 1>'s waist",
-    "chest": "<Subject 1>'s chest",
-    "face": "<Subject 1>'s face",
-    "eyes": "<Subject 1>'s eyes",
-}
-_CAMERA_TARGET_OPTIONS = list(_CAMERA_TARGET_PHRASES.keys())
 
 _SHOT_CONFIG_SEP = "||"
+
 _MAX_CUSTOM_SHOTS = 15
+
+
+_SUBJECT_TYPES = ["Human", "Mecha/Robot", "Creature", "Object/Vehicle"]
+
+_SUBJECT_TEMPLATES = {
+    "Human": {
+        "fallback_label": "<Picture 1> is <Subject 1>, sole character",
+        "retention_features": "the identity, face, eyes, anatomy, makeup, haircut and clothing.",
+        "shot_1_framing": "static full-body shot, front view from head to toe",
+        "shot_1_pose": "maintains a neutral and static pose with arms relaxed at sides with empty open hands, neutral expression.",
+    },
+    "Mecha/Robot": {
+        "fallback_label": "<Picture 1> is <Subject 1>, unit",
+        "retention_features": "the overall chassis, mechanical components, surface finish, and plating.",
+        "shot_1_framing": "static full-view shot, front view showing the complete unit.",
+        "shot_1_pose": "remains in a completely stationary default state, all actuators and mechanisms idle.",
+    },
+    "Creature": {
+        "fallback_label": "<Picture 1> is <Subject 1>, creature",
+        "retention_features": "the overall body structure, skin texture, fur, and features.",
+        "shot_1_framing": "static full-length shot, front view showing the entire creature",
+        "shot_1_pose": "remains in a natural resting stance, completely static and idle.",
+    },
+    "Object/Vehicle": {
+        "fallback_label": "<Picture 1> is <Subject 1>, object",
+        "retention_features": "the form factor, materials, surface details, and paint.",
+        "shot_1_framing": "static full shot, front view showing the entire subject",
+        "shot_1_pose": "remains in a default stationary orientation, perfectly still.",
+    },
+}
+
+
+_STYLE_TYPES = ["Same than Subject 1", "Greyscale Manga", "Colorized Manga", "Anime Cel Shaded (Compact)", "Anime Cel Shaded (Standard)", "Manhwa Style", "Stylized 3D Render", "Photorealistic"]
+
+_STYLE_TEMPLATES = {
+    "Same than Subject 1": (
+        "identical to <Image 1> visual style."
+    ),
+    "Greyscale Manga": (
+        "flat 2D vector, ignore reflections, high quality greyscale manga style, vivid flat greyscale, solid greyscale fills, flat local greyscale, " 
+        "unlit material, posterized material, crisp vector-like clean lineart, flat vector fills, opaque matte finish, non-reflective material, non-glossy material, 2-tone " 
+        "hard shadow steps, sharp shadow boundaries, flat specular fills, sharp specular boundaries, uniform material shading, manga dot screen tones."
+    ),
+    "Colorized Manga": (
+        "flat 2D vector, ignore reflections, high quality colorized manga style, vivid flat colors, solid color fills, flat local colors, unlit material, "
+        "posterized material, crisp vector-like clean lineart, flat vector fills, non-glossy material, non-reflective material, 2-tone hard shadow steps, sharp shadow boundaries, "
+        "flat specular fills, sharp specular boundaries, uniform material shading."
+    ),
+    "Anime Cel Shaded (Compact)": (
+        "High quality anime style, flat 2D vector, crisp lineart, cel shading, signature color palette, ignore reflections, solid specular fills, "
+        "sharp shadow boundaries."
+    ),
+    "Anime Cel Shaded (Standard)": (
+        "High quality anime style, flat 2D vector, crisp lineart, cel shading, signature color palette."
+    ),
+    "Manhwa Style": (
+        "Manhwa style, consistent lineart, neutral white balance, rich and vibrant manhwa colors."
+    ),
+    "Stylized 3D Render": (
+        "Stylized 3D digital animation render, smooth materials, signature color palette, ambient occlusion, soft directional lighting."
+    ),
+    "Photorealistic": (
+        "Photorealistic, studio photography, authentic surface textures, micro-detailed materials, fine weave and physical displacement, "
+        "soft directional lighting, large softbox diffusion, wrap-around light, subtle fill light, soft specular highlights, crisp high-frequency details. "
+        "Enhance this video with sharp, clean details while preserving a natural photorealistic appearance."
+    ),
+}
+
 
 
 _COUNT_WORDS = {
@@ -654,8 +779,8 @@ _COUNT_WORDS = {
 }
 
 
+
 def _parse_multi_description(text: str) -> list[str]:
-    """Extrait les descriptions depuis une chaîne simple ou un tableau JSON."""
     if not text or not text.strip():
         return []
     text_str = text.strip()
@@ -671,20 +796,9 @@ def _parse_multi_description(text: str) -> list[str]:
     return [text_str]
 
 
-def _fill_outfit_descriptions(items: list[str]) -> list[str]:
-    """S'assure qu'au moins une description d'outfit est renvoyée."""
-    if not items:
-        return ["the outfit"]
-    return items
-
-
-def _picture_tags(start_index: int, count: int) -> list[str]:
-    """Génère la liste des tags <Picture N>."""
-    return [f"<Picture {i}>" for i in range(start_index, start_index + count)]
 
 
 def _join_tags_english(tags: list[str]) -> str:
-    """Joint les tags au format anglais (ex: '<Picture 1> and <Picture 2>')."""
     if not tags:
         return ""
     if len(tags) == 1:
@@ -694,43 +808,11 @@ def _join_tags_english(tags: list[str]) -> str:
     return ", ".join(tags[:-1]) + f", and {tags[-1]}"
 
 
+
 def _timecode(seconds: float) -> str:
     minutes, rest = divmod(seconds, 60.0)
     return f"{int(minutes):02d}:{rest:06.3f}"
 
-
-_SUBJECT_TYPES = ["Human", "Mecha/Robot", "Creature", "Object/Vehicle"]
-
-_SUBJECT_TEMPLATES = {
-    "Human": {
-        "fallback_label": "the same character",
-        "header_features": "hairstyle is transferred to <Subject 1>",
-        "summary_features": "retaining the character's hair, body shape, skin, and facial structure from {person_ref}",
-        "retention_features": "retains the outfit; hair, hairstyle, body shape, skin, and facial structure; pose is reset to neutral; no movement preserved.",
-        "intro_features": "<Subject 1>'s hair, hairstyle, and haircut come from {person_ref} and stay identical across all {shots_word} shots. <Subject 1> holds a relaxed, neutral standing posture, disregarding any pose shown in {person_ref}.",
-    },
-    "Mecha/Robot": {
-        "fallback_label": "the same unit",
-        "header_features": "chassis design, paneling, and surface finish are transferred to <Subject 1>",
-        "summary_features": "retaining the unit's chassis, mechanical structure, plating, and surface details from {person_ref}",
-        "retention_features": "retains the overall chassis, mechanical components, surface finish, and plating; pose is reset to neutral; no movement preserved.",
-        "intro_features": "<Subject 1>'s chassis, mechanical design, and surface plating come from {person_ref} and stay identical across all {shots_word} shots. <Subject 1> stands in a neutral, stationary stance, disregarding any pose shown in {person_ref}.",
-    },
-    "Creature": {
-        "fallback_label": "the same creature",
-        "header_features": "scales, and anatomical features are transferred to <Subject 1>",
-        "summary_features": "retaining the creature's body shape, skin texture, eyes, and anatomical features from {person_ref}",
-        "retention_features": "retains the overall body structure, skin texture, fur, and features; pose is reset to neutral; no movement preserved.",
-        "intro_features": "<Subject 1>'s skin texture, anatomical features, and fur come from {person_ref} and stay identical across all {shots_word} shots. <Subject 1> rests in a natural neutral posture, disregarding any pose shown in {person_ref}.",
-    },
-    "Object/Vehicle": {
-        "fallback_label": "the same object",
-        "header_features": "form factor, surface materials, and design details are transferred to <Subject 1>",
-        "summary_features": "retaining the object's form factor, material finish, paint, and mechanical details from {person_ref}",
-        "retention_features": "retains the form factor, materials, surface details, and paint; default resting orientation; no movement preserved.",
-        "intro_features": "<Subject 1>'s form factor, surface finish, and design details come from {person_ref} and stay identical across all {shots_word} shots. <Subject 1> is placed in a neutral resting position, disregarding any angle shown in {person_ref}.",
-    },
-}
 
 
 
@@ -739,11 +821,8 @@ class SpaceGremlinSheetsConfig:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "angle": (_ANGLE_OPTIONS,),
                 "framing": (_FRAMING_OPTIONS,),
-                "camera_angle": (_CAMERA_ANGLE_OPTIONS,),
-                "camera_height": (_CAMERA_HEIGHT_OPTIONS,),
-                "camera_target": (_CAMERA_TARGET_OPTIONS,),
+                "angle": (_ANGLE_OPTIONS,),
                 "expression": (_EXPRESSION_OPTIONS,),
             },
         }
@@ -753,38 +832,35 @@ class SpaceGremlinSheetsConfig:
     FUNCTION = "build"
     CATEGORY = "SpaceGremlin"
 
-    def build(self, angle, framing, camera_angle, camera_height, camera_target, expression):
+    def build(self, framing, angle, expression):
         result = _SHOT_CONFIG_SEP.join(
-            (angle, framing, camera_angle, camera_height, camera_target, expression)
+            (framing, angle, expression)
         )
         return (result,)
 
 
 
-class SheetsCustomPrompt(io.ComfyNode):
+
+class SheetsDynamicPrompt(io.ComfyNode):
     @classmethod
     def define_schema(cls):
         return io.Schema(
-            node_id="SheetsCustomPrompt",
-            display_name="Sheet Prompt - Custom Shots (SpaceGremlin)",
+            node_id="SheetsDynamicPrompt",
+            display_name="Sheet Prompt - Dynamic Shots (SpaceGremlin)",
             category="SpaceGremlin",
             inputs=[
-                io.String.Input("person_description", multiline=True, default=""),
-                io.Combo.Input("subject_type", options=_SUBJECT_TYPES, default="human", optional=True),
-                io.String.Input("backdrop", default="plain light neutral white studio backdrop", multiline=True, optional=True),
-                io.Float.Input("video_duration_seconds", default=5.0, min=1.0, max=60.0, step=0.1, optional=True,
+                io.Combo.Input("subject_type", options=_SUBJECT_TYPES, default="Human", optional=True),
+                io.Combo.Input("style_type", options=_STYLE_TYPES, default="Same than Subject 1", optional=True),
+                io.Float.Input("video_duration_seconds", default=6.58, min=1.0, max=60.0, step=0.01, optional=True,
                     tooltip="The take's actual length in seconds."),
                 io.Int.Input("fps", default=24, min=1, max=120, optional=True,
                     tooltip="Framerate used to convert seconds into frame count (length)."),
                 
                 # --- OVERRIDES OPTIONNELS ---
-                io.String.Input("override_subject_definitions", multiline=True, default="", optional=True,
-                    tooltip="Remplace totalement la section subject_definitions."),
-                io.String.Input("override_summary_features", multiline=True, default="", optional=True,
-                    tooltip="Remplace la description dans summary."),
-                io.String.Input("override_retention_analysis", multiline=True, default="", optional=True,
-                    tooltip="Remplace le texte de rétention après les tags [Shot X]."),
-                
+                io.String.Input("override_subject_definitions", multiline=True, default="", optional=True),
+                io.String.Input("override_style", multiline=True, default="", optional=True),
+                io.String.Input("override_retention_analysis", multiline=True, default="", optional=True),
+
                 io.Autogrow.Input(
                     "shots",
                     template=io.Autogrow.TemplatePrefix(
@@ -800,129 +876,119 @@ class SheetsCustomPrompt(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, person_description, shots,
-                subject_type="human",
-                backdrop="plain light neutral white studio backdrop",
+    def execute(cls, shots=None,
+                subject_type="Human",
+                style_type="Same than Subject 1",
                 video_duration_seconds=5.0,
                 fps=24,
                 override_subject_definitions="",
-                override_summary_features="",
-                override_retention_analysis="") -> io.NodeOutput:
+                override_retention_analysis="",
+                override_style="") -> io.NodeOutput:
         
         tpl = _SUBJECT_TEMPLATES.get(subject_type, _SUBJECT_TEMPLATES["Human"])
-        
-        person_items = [t.strip().rstrip(".") for t in _parse_multi_description(person_description) if t.strip()]
-        person = person_items[0] if person_items else tpl["fallback_label"]
-        set_dressing = backdrop.strip().rstrip(".") or "plain light neutral white studio backdrop"
-        person_count = max(1, len(person_items))
-        person_tags = _picture_tags(1, person_count)
-        person_ref = _join_tags_english(person_tags)
+        person = tpl["fallback_label"]
 
-        parsed: list[tuple[str, str, str, str, str, str]] = []
+        parsed: list[tuple[str, str, str]] = []
         for value in (shots or {}).values():
             if not value:
                 continue
             parts = value.split(_SHOT_CONFIG_SEP)
-            if len(parts) != 6:
+            if len(parts) != 3:
                 continue
             parsed.append(tuple(parts))
 
-        total_shots = max(1, len(parsed))
+        if not parsed:
+            parsed = [(_FRAMING_OPTIONS[0], _ANGLE_OPTIONS[0], _EXPRESSION_OPTIONS[0])]
+
+
+        start_offset = 0.25
+        dynamic_shots_count = len(parsed)
+        total_shots = dynamic_shots_count + 1
+
         duration = float(video_duration_seconds)
-        step = max(0.1, math.floor((duration / total_shots) * 10) / 10)
-        at = [_timecode(i * step) for i in range(total_shots)]
-        shot_tags = ", ".join(f"[Shot {i + 1}]" for i in range(total_shots))
-        shots_word = _COUNT_WORDS.get(total_shots, str(total_shots))
+        remaining_duration = max(0.0, duration - start_offset)
+
+        step = (remaining_duration / dynamic_shots_count) if dynamic_shots_count > 0 else 0.0
+
+        at = [_timecode(start_offset + (i * step)) for i in range(dynamic_shots_count)]
+
+
 
         # 1. SUBJECT DEFINITIONS
         if override_subject_definitions and override_subject_definitions.strip():
             header = f"subject_definitions:\n{override_subject_definitions.strip()}"
         else:
             header = (
-                f"subject_definitions:\n<Subject 1> {person}, and the same figure "
-                f"and proportions established in {person_ref}. "
-                f"{person_ref} {tpl['header_features']}"
+                f"subject_definitions:\n{person}. "
             )
-
-        # 2. SUMMARY (Point fixe après 'static shots' en cas d'override)
-        if override_summary_features and override_summary_features.strip():
-            txt = override_summary_features.strip().rstrip(".")
-            summary_feat = f". {txt}."
+        
+        
+        
+        # 2. STYLE DEFINITIONS
+        if override_style and override_style.strip():
+            style_text = override_style.strip()
+            style_block = f"visual_style_definitions:\n"
+            f"<Style> is the visual style: {style_text}"
         else:
-            summary_feat = f", {tpl['summary_features'].format(person_ref=person_ref)}."
-
+            style_text = _STYLE_TEMPLATES.get(style_type, _STYLE_TEMPLATES["Same than Subject 1"])
+            style_block = (
+                "visual_style_definitions:\n"
+                f"<Style> is the visual style: {style_text}"
+            )
+        
+        # 3. SUMMARY
         summary = (
-            "summary:\n[reference generation] The target video presents "
-            f"<Subject 1> in a {duration:g}-second sequence of "
-            f"{total_shots} static shots{summary_feat} The background remains "
-            f"{set_dressing}. Framing, angle and expression change shot to "
-            "shot as described below; pose is otherwise held still within "
-            "each shot."
+            "summary:\n[reference generation] Sequence of  "
+            f"{total_shots} static shots over {duration:g} seconds. "
         )
 
-        # 3. RETENTION ANALYSIS (Retrait du 'fully_preserved - ' forcé sur override)
+        # 4. RETENTION ANALYSIS
         if override_retention_analysis and override_retention_analysis.strip():
             retention_body = override_retention_analysis.strip()
             retention = (
                 "retention_analysis:\n"
-                f"<Subject 1> (appears in {shot_tags}) - {retention_body}"
+                f"<Subject 1>: {retention_body}"
             )
         else:
             retention_body = tpl['retention_features']
             retention = (
                 "retention_analysis:\n"
-                f"<Subject 1> (appears in {shot_tags}): fully_preserved - {retention_body}"
+                f"<Subject 1>: fully_preserved - {retention_body}"
             )
 
-        intro_feat = tpl['intro_features'].format(person_ref=person_ref, shots_word=shots_word)
+        # 5. DETAILED DESCRIPTION
+        person = tpl["fallback_label"]
+        shot_1_framing_text = tpl["shot_1_framing"]
+        shot_1_pose_text = tpl["shot_1_pose"]
+
+
         intro = (
-            f"The target video uses a static studio lighting setup against "
-            f"{set_dressing}. All shots are framed with generous empty "
-            "margins on every side, ensuring the entire figure and any "
-            "extensions remain fully within the frame without touching or "
-            f"crossing edges. {set_dressing[0].upper()}{set_dressing[1:]} "
-            "and its bright, even lighting stay completely identical across "
-            f"all {shots_word} shots. No text, watermark, logo, caption, or "
-            f"writing of any kind appears anywhere in the video. "
-            f"{intro_feat} "
-            "Each shot is an instant hard cut to a new camera position and "
-            "angle around <Subject 1> — closer or farther, higher or "
-            "lower, tilted up or down. Within each shot, the camera is a "
-            "single static, locked-off shot, as if mounted on a tripod: "
-            "completely still from the first frame of the shot to the "
-            "last, right up to the next hard cut. <Subject 1> remains "
-            "completely motionless throughout, holding one exact pose "
-            "without turning, walking, gesturing, or otherwise moving "
-            "between cuts.\n"
+            "The scene is a model sheet on a seamless neutral white backdrop with even lighting. Applies "
+            "<Style> to the entire video. The opening scene is framed directly as the first shot.\n"
         )
 
-        shot_lines = []
-        for i, (angle, framing, camera_angle, camera_height, camera_target, expression) in enumerate(parsed):
-            framing_text = _FRAMING_PHRASES.get(framing, framing)
+        shot_lines = [
+            f"[Shot 1] use <Style>, {shot_1_framing_text}. <Subject 1> {shot_1_pose_text}"
+        ]
+
+        for i, (framing, angle, expression) in enumerate(parsed):
+            framing_dict = _FRAMING_PHRASES.get(subject_type, _FRAMING_PHRASES["Human"])
+            framing_text = framing_dict.get(framing, framing)
+
             angle_text = _ANGLE_PHRASES.get(angle, angle)
-            target_text = _CAMERA_TARGET_PHRASES.get(camera_target, camera_target)
-            angle_template = _CAMERA_ANGLE_TEMPLATES.get(camera_angle)
-            camera_angle_text = (
-                angle_template.format(target=target_text) if angle_template is not None else camera_angle
-            )
-            expr_text = _EXPRESSION_PHRASES.get(expression, expression)
-            if i == 0:
-                opener = "[Shot 1] "
-            else:
-                opener = f"[Shot {i + 1}] At {at[i]}, a hard cut to "
-            camera_text = camera_angle_text
-            if camera_angle not in _CAMERA_ANGLE_FIXED_HEIGHT:
-                camera_text += f", {_CAMERA_HEIGHT_PHRASES.get(camera_height, camera_height)}"
+            
+            shot_num = i + 2  # Décalage : Shot 2, Shot 3, ... Shot 8
+            opener = f"[Shot {shot_num}] At {at[i]}, use <Style>, the shot cuts to "
+            
             shot_lines.append(
-                f"{opener}{framing_text} of {target_text}, "
-                f"{angle_text}, {camera_text}, a static, "
-                f"locked-off shot, with a {expr_text} expression."
+                f"{opener}{framing_text}, {angle_text}. No panning, no tracking."
             )
+
         detail = "detailed_description:\n" + intro + "\n" + "\n".join(shot_lines)
 
         prompt = (
-            f"{header}\n\n{summary}\n\n{retention}\n\n{detail}\n\n"
-            "overall_soundscape:\nN/A\n\nnon_diegetic_music:\nN/A"
+            f"{header}\n\n{style_block}\n\n{summary}\n\n{retention}\n\n{detail}\n\n"
+            "overall_soundscape: There is no noise or sound.\nnon_diegetic_music: N/A"
         )
 
         frame_length = int(round(duration * fps))
@@ -1711,7 +1777,7 @@ NODE_CLASS_MAPPINGS = {
     "PauseControl": PauseControl,
     "SpaceGremlinFramePicker": SpaceGremlinFramePicker,
     "SpaceGremlinSheetsConfig": SpaceGremlinSheetsConfig,
-    "SheetsCustomPrompt": SheetsCustomPrompt,
+    "SheetsDynamicPrompt": SheetsDynamicPrompt,
     "AddImageToList": AddImageToList,
     "DemuxAlpha": DemuxAlpha,
     "RemuxAlpha": RemuxAlpha,
@@ -1741,7 +1807,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "PauseControl": "Pause / Control Selector (SpaceGremlin)",
     "SpaceGremlinFramePicker": "Frame Picker & Grid Inspector (SpaceGremlin)",
     "SpaceGremlinSheetsConfig": "Sheets Shot Config (SpaceGremlin)",
-    "SheetsCustomPrompt": "Sheet Prompt - Custom Shots (SpaceGremlin)",
+    "SheetsDynamicPrompt": "Sheet Prompt - Dynamic Shots (SpaceGremlin)",
     "AddImageToList": "Add Image to List (SpaceGremlin)",
     "DemuxAlpha": "Demux Alpha (SpaceGremlin)",
     "RemuxAlpha": "Remux Alpha (SpaceGremlin)",
