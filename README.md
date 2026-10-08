@@ -1,77 +1,87 @@
-# ComfyUI SpaceGremlin Toolkit
+# 🌌 ComfyUI SpaceGremlin Toolkit
 
-A lightweight collection of custom nodes for **ComfyUI** focused on batch manipulation, timeline management, dynamic string concatenation, and enum-based text selection.
-
----
-
-## 🛠️ Nodes Overview
-
-### 1. Dynamic Batch Index Extractor
-Allows you to extract specific frames/images from a tensor batch using dynamic index inputs.
-
-**Inputs:**
-- `images` (*IMAGE*): The input batch of images.
-- `index_0`, `index_1`, ... (*INT*): Dynamic input slots for frame indices.
-
-**Outputs:**
-- `images` (*IMAGE*): Re-batched images matching the selected indices.
-- `count` (*INT*): Total number of extracted frames.
+A comprehensive, modular suite of custom nodes designed for **ComfyUI** to optimize, automate, and build high-fidelity workflows — including dynamic character sheet generation, alpha channel handling, list processing, and batch control.
 
 ---
 
-### 2. Dynamic Text Concat
-Concatenates multiple string inputs dynamically into a single string using a custom separator.
+## ✨ Features & Architecture Highlights
 
-**Inputs:**
-- `separator` (*STRING*): Separator used between text entries (supports `\n` for line breaks).
-- `text_0`, `text_1`, ... (*STRING*): Dynamic input slots for strings to join.
-
-**Outputs:**
-- `STRING`: Combined output text.
+* **Native Python List Handling**: Fully compatible with `INPUT_IS_LIST = True` for granular image-by-image manipulation without tensor constraint issues.
+* **Studio-Grade Character Sheets**: Complete dynamic prompt & layout pipeline for character turnarounds, expression sheets, and multi-angle shots.
+* **GPU-Accelerated Alpha Channel Suite**: Demuxing, remuxing, padding, cropping, and compositing with full PyTorch acceleration and color validation.
+* **Interactive UI Extensions**: WebSocket-synchronized frame pickers, comparison tools, and pause controls.
 
 ---
 
-### 3. Enum Text Selector
-Maps a choice from an enum definition to a corresponding line in a multiline string input.
+## 🛠️ Complete Node Reference
 
-**Inputs:**
-- `choice` (*ENUM*): The selected enum option.
-- `enum_definition` (*STRING*): Multiline enum keys definition.
-- `output_lines` (*STRING, optional*): Multiline text mapped line-by-line to each enum index.
-
-**Outputs:**
-- `text` (*STRING*): Line matching the selected enum index.
-- `index` (*INT*): 0-based position of the selection.
+### 🎬 Character Sheet & Prompting
+* **`Sheet Prompt - Custom Shots (SpaceGremlin)`** (`SheetsCustomPrompt`)  
+  Generates multi-section prompts (`subject_definitions`, `summary`, `retention_analysis`, `detailed_description`) with live frame timing, shot tags, and optional multilines section overrides.
+* **`Sheets Shot Config (SpaceGremlin)`** (`SpaceGremlinSheetsConfig`)  
+  Configures custom shot parameters for multi-angle character reference sheets.
+* **`Sheet Layout Splitter (SpaceGremlin)`** (`SpaceGremlinSheetLayout`)  
+  Splits and formats incoming image sets into optimized character sheet grid structures.
 
 ---
 
-### 4. Shot Timeline Generator
-Generates timecodes and shot labels for video/animation prompting based on duration, FPS, and shot count.
-
-**Inputs:**
-- `total_seconds` (*FLOAT*): Total duration of the animation sequence.
-- `fps` (*INT*): Frame rate (frames per second).
-- `num_shots` (*INT*): Total number of shots in the sequence.
-- `selected_index` (*INT*): Index of the shot to retrieve.
-
-**Outputs:**
-- `selected_shot` (*STRING*): The specific timecode line for the selected shot index.
-- `full_timeline_text` (*STRING*): Complete timeline listing all shots and timecodes.
-- `total_shots` (*INT*): Total count of generated shots.
+### 🎨 Transparency & Alpha Channel Tools
+* **`Flatten Alpha Background (SpaceGremlin)`** (`SpaceGremlinFlattenAlpha`)  
+  Composites transparent images onto solid color backgrounds using PyTorch GPU blending with strict Hex-code validation.
+* **`Demux Alpha (SpaceGremlin)`** (`DemuxAlpha`)  
+  Extracts the alpha channel mask from an RGBA image.
+* **`Remux Alpha (SpaceGremlin)`** (`RemuxAlpha`)  
+  Recombines a standalone mask back into an RGB image as an alpha channel.
+* **`Custom Transparent Padding (SpaceGremlin)`** (`CustomTransparentPadding`)  
+  Pads images with transparent margins.
+* **`Conditional Alpha Crop (SpaceGremlin)`** (`ConditionalAlphaCrop`)  
+  Automatically crops transparent padding around subjects based on alpha threshold bounding boxes.
+* **`Resize And Pad - Transparent (SpaceGremlin)`** (`SpaceGremlinResizeAndPad`)  
+  Resizes and pads transparent images while maintaining accurate aspect ratios.
+* **`Stitch Images - Transparent (SpaceGremlin)`** (`SpaceGremlinStitchImages`)  
+  Stitches multiple transparent images side-by-side or stacked cleanly.
+* **`Hex To Color Value (SpaceGremlin)`** (`HexToColorValue`)  
+  Converts Hex color strings into normalized RGB/RGBA color vectors.
 
 ---
 
-### 5. Simple Batch Index Overlay
-Overlays the current frame index as visible text directly onto each image in a batch.
+### 🖼️ Interactive Selection & Preview UI
+* **`Frame Picker & Grid Inspector (SpaceGremlin)`** (`SpaceGremlinFramePicker`)  
+  Interactive WebSocket-based UI for selecting frames from a sequence, featuring dynamic range validation (5–7 frames), keyboard shortcuts (`Escape`, `S`), audio cues, and full-screen previewing.
+* **`Image Compare & Select (SpaceGremlin)`** (`ImageCompareSelector`)  
+  Side-by-side comparison node to filter and output preferred images.
+* **`Pause / Control Selector (SpaceGremlin)`** (`PauseControl`)  
+  Execution control node to pause workflows for manual review or selection.
 
-**Inputs:**
-- `image` (*IMAGE*): Input image batch.
-- `font_size` (*INT*): Overlay text size (default: 48).
-- `font_color` (*STRING*): Hex color code (e.g., `#FFFFFF`).
-- `start_index` (*INT*): Starting index number for the first frame.
+---
 
-**Outputs:**
-- `IMAGE`: Processed image batch with index overlays.
+### 📋 List Manipulation & Batching
+* **`Add Image To List (SpaceGremlin)`** (`AddImageToList`)  
+  Appends single or multiple images into a unified Python list.
+* **`List Split at Index (SpaceGremlin)`** (`SpaceGremlinListSplitAtIndex`)  
+  Partitions Python lists at a specific target index.
+* **`List Select Items (SpaceGremlin)`** (`SpaceGremlinListSelect`)  
+  Selects targeted elements from a list using indices or ranges.
+* **`List Count (SpaceGremlin)`** (`SpaceGremlinListCount`)  
+  Returns the exact item count of a list.
+* **`Simple Batch Index Overlay (SpaceGremlin)`** (`SimpleBatchIndexOverlay`)  
+  Overlays visual index tags on images within a batch/list.
+* **`Dynamic Batch Index Extractor (SpaceGremlin)`** (`DynamicBatchIndexExtractor`)  
+  Extracts specific items dynamically based on batch positions.
+
+---
+
+### 🔤 Text, Timeline & Logic Helpers
+* **`Enum Text Selector (SpaceGremlin)`** (`EnumTextSelector`)  
+  Provides fixed drop-down enumeration options for text output.
+* **`Dynamic Text Concat (SpaceGremlin)`** (`DynamicTextConcat`)  
+  Dynamically concatenates multiple text strings.
+* **`Shot Timeline Generator (SpaceGremlin)`** (`ShotTimelineGenerator`)  
+  Generates timecodes and duration tags for video/shot timelines.
+* **`Bool OR (SpaceGremlin)`** (`SpaceGremlinBoolOR`) / **`Bool AND`** (`SpaceGremlinBoolAND`) / **`Bool XOR`** (`SpaceGremlinBoolXOR`)  
+  Standard boolean logic gate nodes.
+* **`Int Compare (SpaceGremlin)`** (`SpaceGremlinIntCompare`)  
+  Integer comparison node (`==`, `>`, `<`, etc.) returning boolean flags.
 
 ---
 
