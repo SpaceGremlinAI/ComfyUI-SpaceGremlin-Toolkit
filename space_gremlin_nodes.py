@@ -923,7 +923,6 @@ class SheetsDynamicPrompt(io.ComfyNode):
             )
         
         
-        
         # 2. STYLE DEFINITIONS
         if override_style and override_style.strip():
             style_text = override_style.strip()
@@ -968,20 +967,59 @@ class SheetsDynamicPrompt(io.ComfyNode):
         )
 
         shot_lines = [
-            f"[Shot 1] use <Style>, {shot_1_framing_text}. <Subject 1> {shot_1_pose_text}"
+            f"[Shot 1] use <Style>, {shot_1_framing_text} <Subject 1> {shot_1_pose_text}"
         ]
+
+
+        _BACK_ANGLES = {
+            "back",
+            "back 3/4 left",
+            "back 3/4 right",
+        }
+
+        _EXPRESSION_FRAMINGS = {
+            "Medium Full Shot",
+            "Medium Shot",
+            "Medium Close-up Mid-Torso",
+            "Bust Shot",
+            "Close-up",
+            "Extreme Close-up",
+        }
+
+        _NEUTRAL_ONLY_FRAMINGS = {
+            "Full Body Shot",
+        }
+
+        _EXPRESSION_SUBJECTS = {"Human", "Creature"}
+
 
         for i, (framing, angle, expression) in enumerate(parsed):
             framing_dict = _FRAMING_PHRASES.get(subject_type, _FRAMING_PHRASES["Human"])
             framing_text = framing_dict.get(framing, framing)
 
             angle_text = _ANGLE_PHRASES.get(angle, angle)
+
+            # Expression
+            is_applicable_subject = subject_type in _EXPRESSION_SUBJECTS
+            is_back_view = angle in _BACK_ANGLES
+
+            if is_applicable_subject and not is_back_view:
+                if framing in _EXPRESSION_FRAMINGS:
+                    expr_val = _EXPRESSION_PHRASES.get(expression, expression)
+                    expression_text = f"From Neutral expression to a {expr_val} expression. "
+                elif framing in _NEUTRAL_ONLY_FRAMINGS:
+                    expression_text = "Neutral expression. "
+                else:
+                    expression_text = ""
+            else:
+                expression_text = ""
+
             
-            shot_num = i + 2  # Décalage : Shot 2, Shot 3, ... Shot 8
+            shot_num = i + 2
             opener = f"[Shot {shot_num}] At {at[i]}, use <Style>, the shot cuts to "
             
             shot_lines.append(
-                f"{opener}{framing_text}, {angle_text}. No panning, no tracking."
+                f"{opener}{framing_text}, {angle_text}. {expression_text}No panning, no tracking."
             )
 
         detail = "detailed_description:\n" + intro + "\n" + "\n".join(shot_lines)
